@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - EcoWarga</title>
+    <script>
+        (function () {
+            const key = 'ecowarga-theme';
+            const savedTheme = localStorage.getItem(key);
+            const theme = savedTheme === 'dark' || savedTheme === 'light'
+                ? savedTheme
+                : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="brand-logo">
+            <img src="assets/logo.png" alt="Logo EcoWarga" class="brand-icon-img"> EcoWarga
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link">Beranda</a>
+            <a href="lapor.html" class="nav-link">Lapor</a>
+            <a href="admin.html" class="nav-link active">Panel Admin</a>
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+                <span class="theme-toggle-icon" aria-hidden="true"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Login Screen -->
+    <div class="container" id="loginScreen">
+        <div class="card" style="max-width: 400px; margin: 40px auto; text-align: center;">
+            <h2 style="color: var(--primary); margin-bottom: 10px;">Masuk Admin</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="adminUsername" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div class="container hidden" id="dashboardScreen" style="max-width: 1300px;">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="color: var(--primary); margin: 0;">Data Laporan</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span id="aktifTotal" class="badge-status badge-aktif">0 Laporan</span>
+                    <span id="adminGreeting" class="badge-status badge-aktif"></span>
+                    <button id="logoutBtn" class="btn-outline-danger" onclick="logoutAdmin()">Logout</button>
+                </div>
+            </div>
+
+            <div class="admin-summary-grid">
+                <div class="card admin-status-card">
+                    <h3>📌 Laporan Aktif</h3>
+                    <p id="countAktif" class="admin-stat-number">0</p>
+                    <small>Menunggu penanganan admin</small>
+                </div>
+                <div class="card admin-status-card">
+                    <h3>✅ Selesai</h3>
+                    <p id="countSelesai" class="admin-stat-number">0</p>
+                    <small>Sudah diproses dan ditutup</small>
+                </div>
+                <div class="card admin-status-card">
+                    <h3>🗑️ Dihapus</h3>
+                    <p id="countDihapus" class="admin-stat-number">0</p>
+                    <small>Dihapus tanpa diproses</small>
+                </div>
+            </div>
+
+            <div class="admin-main-table-section">
+                <h3 class="admin-table-title">Data Laporan Aktif</h3>
+                <div style="overflow-x: auto;">
+                    <table id="tabelLaporan" class="tabel-laporan">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Pelapor</th>
+                                <th>Lokasi</th>
+                                <th>Deskripsi &amp; Foto</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelBody"></tbody>
+                    </table>
+                </div>
+                <div id="paginasiAktif" class="pagination-bar"></div>
+            </div>
+        </div>
+
+        <!-- Kartu terpisah khusus Riwayat Laporan -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="color: var(--primary); margin: 0;">Riwayat Laporan</h2>
+                <span id="riwayatTotal" class="badge-status badge-selesai">0 Laporan</span>
+            </div>
+
+            <div class="admin-main-table-section">
+                <h3 class="admin-table-title">Riwayat Selesai &amp; Dihapus</h3>
+                <div style="overflow-x: auto;">
+                    <table id="tabelRiwayat" class="tabel-laporan">
+                        <thead>
+                            <tr>
+                                <th>Waktu</th>
+                                <th>Pelapor</th>
+                                <th>Lokasi</th>
+                                <th>Deskripsi &amp; Foto</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelRiwayatBody"></tbody>
+                    </table>
+                </div>
+                <div id="paginasiRiwayat" class="pagination-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Foto -->
+    <div id="imgModal" class="img-modal-overlay" onclick="this.style.display='none'">
+        <img id="modalImg" src="" alt="Foto Laporan">
+    </div>
+
+    <!-- Modal Konfirmasi Kustom (pengganti confirm() bawaan browser) -->
+    <div id="confirmModal" class="confirm-modal-overlay hidden">
+        <div class="confirm-modal-box">
+            <p id="confirmModalMessage"></p>
+            <div class="confirm-modal-actions">
+                <button id="confirmModalCancel" class="btn-outline-danger">Batal</button>
+                <button id="confirmModalOk" class="btn-admin btn-admin-danger">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifikasi (pengganti alert() bawaan browser) -->
+    <div id="adminToast" class="admin-toast is-hidden"></div>
+
+    <!-- Back to Top -->
+    <button id="btnTop" class="btn-top" title="Kembali ke atas">↑</button>
+
+    <script src="js/admin.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

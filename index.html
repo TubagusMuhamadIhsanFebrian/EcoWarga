@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWarga - Lingkungan Bersih</title>
+    <script>
+        (function () {
+            const key = 'ecowarga-theme';
+            const savedTheme = localStorage.getItem(key);
+            const theme = savedTheme === 'dark' || savedTheme === 'light'
+                ? savedTheme
+                : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html" class="brand-logo">
+            <img src="assets/logo.png" alt="Logo EcoWarga" class="brand-icon-img"> EcoWarga
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link active">Beranda</a>
+            <a href="lapor.html" class="nav-link">Lapor</a>
+            <a href="admin.html" class="nav-link">Panel Admin</a>
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+                <span class="theme-toggle-icon" aria-hidden="true"></span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div style="max-width: 600px;">
+                <h1 style="font-size: 2.8rem; margin-bottom: 10px; font-weight: 800;">BERSAMA WUJUDKAN LINGKUNGAN HEBAT</h1>
+                <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 20px;">Platform gotong royong digital warga untuk mewujudkan lingkungan yang bersih, aman, dan bebas dari tumpukan masalah.</p>
+                <a href="lapor.html" class="btn-hero">Buat Laporan Baru</a>
+            </div>
+            <svg viewBox="0 0 24 24" fill="var(--primary)" style="width: 200px; height: 200px; opacity: 0.9;">
+                <path d="M12 2C7.58 6.34 5 8.66 5 12.5c0 3.59 2.91 6.5 6.5 6.5S18 16.09 18 12.5C18 8.66 15.42 6.34 12 2zM12 17c-2.48 0-4.5-2.02-4.5-4.5S9.52 8 12 8s4.5 2.02 4.5 4.5S14.48 17 12 17zm1-10h-2v4H7v2h4v4h2v-4h4v-2h-4V7z"/>
+            </svg>
+        </div>
+
+        <!-- STATISTIK -->
+        <div class="grid-row">
+            <div class="card" style="border-top: 4px solid var(--primary); text-align: center;">
+                <h3 id="totalLapor" style="font-size: 2.5rem; color: var(--primary); margin: 0;">0</h3>
+                <p style="font-weight: 600; color: var(--text-secondary); font-size: 0.9rem;">Laporan Masuk</p>
+            </div>
+            <div class="card" style="border-top: 4px solid #3b82f6; text-align: center;">
+                <h3 id="totalSelesai" style="font-size: 2.5rem; color: #3b82f6; margin: 0;">0</h3>
+                <p style="font-weight: 600; color: var(--text-secondary); font-size: 0.9rem;">Masalah Selesai</p>
+            </div>
+            <div class="card" style="border-top: 4px solid var(--accent); text-align: center;">
+                <h3 id="totalAktif" style="font-size: 2.5rem; color: var(--accent); margin: 0;">0</h3>
+                <p style="font-weight: 600; color: var(--text-secondary); font-size: 0.9rem;">Laporan Diproses</p>
+            </div>
+        </div>
+
+        <!-- MENGAPA ECOWARGA -->
+        <div class="card" style="margin-top: 20px;">
+            <h3 style="color: var(--primary); text-align: center; margin-bottom: 20px; font-size: 1.5rem;">Mengapa Menggunakan EcoWarga?</h3>
+            <div class="grid-row" style="margin-top: 0;">
+                <div class="text-center" style="padding: 10px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">⚡</div>
+                    <h4 style="color: var(--text-primary);">Tindak Cepat</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Laporan beserta foto dan koordinat langsung terintegrasi dengan petugas kebersihan setempat.</p>
+                </div>
+                <div class="text-center" style="padding: 10px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">🔍</div>
+                    <h4 style="color: var(--text-primary);">Pantauan Transparan</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Pantau progres penanganan secara transparan mulai dari tahap 'Diproses' hingga 'Selesai'.</p>
+                </div>
+                <div class="text-center" style="padding: 10px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 10px;">🤝</div>
+                    <h4 style="color: var(--text-primary);">Ruang Gotong Royong</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Menjadi wadah kepedulian antar sesama warga untuk merawat fasilitas dan kelestarian alam.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISI & MISI -->
+        <div class="grid-row">
+            <div class="card" style="display: flex; gap: 20px; align-items: center;">
+                <svg class="vector-icon" viewBox="0 0 24 24" fill="#2D6A4F">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                </svg>
+                <div>
+                    <h3 style="color: var(--primary); margin-bottom: 10px;">Visi & Misi</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">Menjadi portal digital terdepan dalam mewujudkan lingkungan Bogor Raya yang bersih, sehat, asri, dan harmonis melalui peran aktif seluruh warga.</p>
+                </div>
+            </div>
+            <div class="card" style="display: flex; gap: 20px; align-items: center;">
+                <svg class="vector-icon" viewBox="0 0 24 24" fill="#E67E22">
+                    <path d="M22.71 7.29l-5-5c-.39-.39-1.02-.39-1.41 0L4.5 14.59V19.5c0 .55.45 1 1 1h4.91l11.79-11.79c.39-.39.39-1.02 0-1.42zM7.5 17.5L6 16l8.5-8.5 1.5 1.5L7.5 17.5z"/>
+                </svg>
+                <div>
+                    <h3 style="color: var(--accent); margin-bottom: 10px;">Aksi Lingkungan</h3>
+                    <ul style="font-size: 0.95rem; color: #555; line-height: 1.8; padding-left: 20px;">
+                        <li style="color: var(--text-secondary);">Meningkatkan partisipasi aktif warga.</li>
+                        <li style="color: var(--text-secondary);">Menjamin transparansi penanganan masalah.</li>
+                        <li style="color: var(--text-secondary);">Mempercepat kolaborasi dengan instansi terkait.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- KATEGORI LAPORAN -->
+        <div class="card" style="margin-top: 20px;">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">Apa yang bisa Anda laporkan?</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <span class="kategori-badge">🗑️ Tumpukan Sampah</span>
+                <span class="kategori-badge">🌊 Selokan Mampet</span>
+                <span class="kategori-badge">🌳 Pohon Rawan Tumbang</span>
+                <span class="kategori-badge">💡 Fasilitas Rusak</span>
+            </div>
+        </div>
+
+        <!-- TIPS LINGKUNGAN -->
+        <div class="card" style="margin-top: 20px;">
+            <h3 style="color: var(--primary); text-align: center; margin-bottom: 20px;">Tips Lingkungan Sehat</h3>
+            <div class="grid-row" style="margin-top: 0;">
+                <div class="card" style="background: var(--surface-accent); border-color: var(--surface-accent-border); margin-bottom: 0;">
+                    <h4 style="color: var(--text-accent); margin-bottom: 5px;">♻️ Pilah Sampah</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Pisahkan sampah organik dan anorganik di rumah untuk membantu proses daur ulang.</p>
+                </div>
+                <div class="card" style="background: var(--surface-accent); border-color: var(--surface-accent-border); margin-bottom: 0;">
+                    <h4 style="color: var(--text-accent); margin-bottom: 5px;">🚰 Hemat Air</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Perbaiki keran bocor dan gunakan air secukupnya untuk menjaga cadangan air tanah kita.</p>
+                </div>
+                <div class="card" style="background: var(--surface-accent); border-color: var(--surface-accent-border); margin-bottom: 0;">
+                    <h4 style="color: var(--text-accent); margin-bottom: 5px;">🌳 Penghijauan</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Tanamlah tanaman di halaman rumah atau gunakan pot gantung untuk area terbatas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAMPAK AKSI WARGA -->
+        <div class="card" style="margin-top: 20px; background: var(--surface-accent); border: 1px solid var(--surface-accent-border);">
+            <h3 style="color: var(--primary); margin-bottom: 20px; text-align: center;">Dampak Aksi Warga</h3>
+            <div class="grid-row" style="margin-top: 0;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">🌱</div>
+                    <h4 style="color: var(--text-accent); margin-top: 5px;">Lingkungan Sehat</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Mengurangi risiko penyakit akibat tumpukan sampah.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">💧</div>
+                    <h4 style="color: var(--text-accent); margin-top: 5px;">Bebas Banjir</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Pembersihan selokan rutin mencegah genangan air.</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">✨</div>
+                    <h4 style="color: var(--text-accent); margin-top: 5px;">Estetika Kota</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Lingkungan bersih meningkatkan kenyamanan tinggal.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- LANGKAH MUDAH -->
+        <div class="grid-row">
+            <div class="card" style="padding: 20px; background: var(--surface-2);">
+                <div style="font-size: 2rem;">📍</div>
+                <h4 style="color: var(--primary); margin: 10px 0;">1. Temukan</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Cek area sekitar, lalu potret masalahnya agar titik lokasi terlihat jelas.</p>
+            </div>
+            <div class="card" style="padding: 20px; background: var(--surface-2);">
+                <div style="font-size: 2rem;">📱</div>
+                <h4 style="color: var(--primary); margin: 10px 0;">2. Laporkan</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Gunakan peta kami untuk menandai titik koordinat, isi detail, dan lampirkan foto.</p>
+            </div>
+            <div class="card" style="padding: 20px; background: var(--surface-2);">
+                <div style="font-size: 2rem;">✅</div>
+                <h4 style="color: var(--primary); margin: 10px 0;">3. Selesai</h4>
+                <p style="font-size: 0.85rem; color: var(--text-secondary);">Laporan langsung terkirim ke sistem admin agar segera ditindaklanjuti.</p>
+            </div>
+        </div>
+
+        <!-- AKTIVITAS & PENCAPAIAN -->
+        <div class="card" style="margin-top: 20px; background: var(--surface-2);">
+            <h3 style="color: var(--primary); text-align: center; margin-bottom: 20px;">Aktivitas & Pencapaian</h3>
+            <div class="grid-row" style="margin-top: 0;">
+                <div class="card" style="box-shadow: none; border: 1px solid var(--border); background: var(--surface); margin-bottom: 0;">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🧹</div>
+                    <h4 style="color: var(--text-accent);">Gotong Royong</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Pembersihan area selokan di Bogor Tengah berhasil mengangkut 2 ton sampah minggu ini.</p>
+                </div>
+                <div class="card" style="box-shadow: none; border: 1px solid var(--border); background: var(--surface); margin-bottom: 0;">
+                    <div style="font-size: 2rem; margin-bottom: 5px;">🌳</div>
+                    <h4 style="color: var(--text-accent);">Penghijauan Kota</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Penanaman 50 bibit pohon pelindung baru terlaksana di sepanjang jalur protokol.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- AJAKAN KOLABORASI -->
+        <div class="card" style="margin-top: 20px; background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%); text-align: center;">
+            <h3 style="color: var(--primary); margin-bottom: 10px;">Mari Berkolaborasi!</h3>
+            <p style="font-size: 0.95rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 20px;">Punya komunitas atau ingin menjadi relawan lingkungan di area Bogor? Mari gabung bersama kami untuk menciptakan perubahan yang lebih besar.</p>
+            <button onclick="alert('Terima kasih! Tim admin akan segera menghubungi Anda melalui email.');" class="btn-primary" style="width: auto; padding: 10px 30px;">Daftar Jadi Relawan</button>
+        </div>
+
+        <!-- CTA -->
+        <div class="card" style="margin-top: 20px; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; padding: 30px; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <h2 style="margin: 0; color: white;">Jangan Tunggu Nanti</h2>
+                <p style="margin: 5px 0 0; opacity: 0.8; color: white;">Satu laporan Anda beserta buktinya bisa menyelamatkan lingkungan.</p>
+            </div>
+            <a href="lapor.html" class="btn-cta">Mulai Lapor Sekarang ➔</a>
+        </div>
+
+        <!-- KONTAK & BANTUAN -->
+        <div class="card" style="margin-top: 20px; text-align: center;">
+            <h3 style="color: var(--primary); margin-bottom: 10px;">Butuh Bantuan Lebih Lanjut?</h3>
+            <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;">Jika Anda mengalami kendala teknis dalam pelaporan, tim admin EcoWarga siap membantu Anda.</p>
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="mailto:tubagusihsan28@gmail.com" class="btn-outline-success contact-link" style="padding: 10px 20px;">
+                    <img src="https://cdn.simpleicons.org/gmail/EA4335" alt="Gmail" class="contact-icon">
+                    <span>Email Admin</span>
+                </a>
+                <a href="https://wa.me/085772949083" class="btn-outline-success contact-link" style="padding: 10px 20px;" target="_blank" rel="noopener noreferrer">
+                    <img src="https://cdn.simpleicons.org/whatsapp/25D366" alt="WhatsApp" class="contact-icon">
+                    <span>Chat WhatsApp</span>
+                </a>
+            </div>
+        </div>
+
+    </div><!-- /.container -->
+
+    <footer>
+        <div class="container" style="padding: 0;">
+            EcoWarga - Lingkungan Bogor Raya © 2026<br>
+            <span style="font-size: 0.75rem; opacity: 0.6; font-weight: 600; letter-spacing: 1px; margin-top: 8px; display: inline-block;">TUBAGUS MUHAMAD IHSAN FEBRIAN</span>
+        </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button id="btnTop" class="btn-top" title="Kembali ke atas">↑</button>
+
+    <script src="js/index.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

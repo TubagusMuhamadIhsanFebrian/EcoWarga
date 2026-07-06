@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapor - EcoWarga</title>
+    <script>
+        (function () {
+            const key = 'ecowarga-theme';
+            const savedTheme = localStorage.getItem(key);
+            const theme = savedTheme === 'dark' || savedTheme === 'light'
+                ? savedTheme
+                : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="brand-logo">
+            <img src="assets/logo.png" alt="Logo EcoWarga" class="brand-icon-img"> EcoWarga
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link">Beranda</a>
+            <a href="lapor.html" class="nav-link active">Lapor</a>
+            <a href="admin.html" class="nav-link">Panel Admin</a>
+            <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema">
+                <span class="theme-toggle-icon" aria-hidden="true"></span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2 style="color: var(--primary);">Form Laporan Warga</h2>
+
+        <div class="lapor-grid">
+            <!-- Peta -->
+            <div class="card" style="margin: 0; padding: 15px;">
+                <p style="margin-bottom: 10px; font-weight: bold; color: var(--primary);">Pilih Lokasi di Peta:</p>
+                <div class="map-wrapper">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="card" style="margin: 0;">
+                <form id="laporForm">
+                    <input type="hidden" id="lat">
+                    <input type="hidden" id="lng">
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Kecamatan</label>
+                            <select id="kecamatan" required>
+                                <option value="">Pilih Kecamatan...</option>
+                                <option value="Bogor Tengah">Bogor Tengah</option>
+                                <option value="Bogor Timur">Bogor Timur</option>
+                                <option value="Bogor Selatan">Bogor Selatan</option>
+                                <option value="Bogor Utara">Bogor Utara</option>
+                                <option value="Bogor Barat">Bogor Barat</option>
+                                <option value="Tanah Sareal">Tanah Sareal</option>
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label>Kelurahan / Desa</label>
+                            <input type="text" id="kelurahan" placeholder="Contoh: Cibinong" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Kampung / Jalan</label>
+                            <input type="text" id="kampung" placeholder="Contoh: Jalan Raya Bogor" required>
+                        </div>
+                        <div class="form-group half">
+                            <label>RT / RW</label>
+                            <input type="text" id="rtrw" placeholder="Contoh: 01/02" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label>Nama Pelapor</label>
+                            <input type="text" id="namaPelapor" placeholder="Contoh: Jalaludin" required>
+                        </div>
+                        <div class="form-group half">
+                            <label>Nomor Handphone</label>
+                            <input type="number" id="noHpPelapor" placeholder="Contoh: 0812xxxxxx" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Unggah Bukti Foto</label>
+                        <input type="file" id="fotoLaporan" class="input-foto" accept="image/png, image/jpeg" required>
+                        <small style="color: #64748b; font-size: 0.8rem;">* Format .JPG / .PNG (Wajib diisi)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Deskripsi Masalah</label>
+                        <textarea id="deskripsi" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Kirim Laporan</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="daftarLaporan"></div>
+    </div>
+
+    <!-- Modal Edit Warga -->
+    <div id="modalEditWarga" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="margin-bottom: 15px; color: var(--primary);">Ubah Laporan</h3>
+            <input type="hidden" id="editIdWarga">
+            <input type="hidden" id="editLatWarga">
+            <input type="hidden" id="editLngWarga">
+
+            <div class="map-wrapper" style="margin-bottom: 15px;">
+                <div id="mapEdit"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>Kecamatan</label>
+                    <select id="editKecamatanWarga">
+                        <option value="Bogor Tengah">Bogor Tengah</option>
+                        <option value="Bogor Timur">Bogor Timur</option>
+                        <option value="Bogor Selatan">Bogor Selatan</option>
+                        <option value="Bogor Utara">Bogor Utara</option>
+                        <option value="Bogor Barat">Bogor Barat</option>
+                        <option value="Tanah Sareal">Tanah Sareal</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label>Kelurahan</label>
+                    <input type="text" id="editKelurahanWarga">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>Kampung / Jalan</label>
+                    <input type="text" id="editKampungWarga">
+                </div>
+                <div class="form-group half">
+                    <label>RT / RW</label>
+                    <input type="text" id="editRtrwWarga">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>Nama Pelapor</label>
+                    <input type="text" id="editNamaPelaporWarga">
+                </div>
+                <div class="form-group half">
+                    <label>Nomor Handphone</label>
+                    <input type="number" id="editNoHpPelaporWarga">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Ubah Bukti Foto (Opsional)</label>
+                <input type="file" id="editFotoLaporan" class="input-foto" accept="image/png, image/jpeg">
+            </div>
+
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea id="editDeskripsiWarga" rows="2"></textarea>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeEditWarga()">Batal</button>
+                <button type="button" class="btn-save" onclick="saveEditWarga()">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">✅ Laporan berhasil diproses!</div>
+
+    <!-- Back to Top -->
+    <button id="btnTop" class="btn-top" title="Kembali ke atas">↑</button>
+
+    <script src="js/lapor.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
